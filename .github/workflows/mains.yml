@@ -1,4 +1,4 @@
-name: RumiOS Custom Core Prime Build Engine
+ name: RumiOS Custom Core Prime Build Engine
 
 on:
   workflow_dispatch:
@@ -66,21 +66,20 @@ jobs:
     - name: Sync Down Core Android Source Tree
       run: |
         cd build_workspace
-        # Pulls only the official clean baseline configuration smoothly
         repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags --prune --fail-fast
 
     - name: Manual Force Injection of Hardware Trees
       run: |
         cd build_workspace
         echo "======================================================"
-        echo "FORCING DIRECT GIT CLONE INJECTION FOR MSM8916 PLATFORM"
+        echo "USING ANONYMOUS PROTOCOL BYPASS FOR HARDWARE INJECTION"
         echo "======================================================"
         
-        # Manually force clone the repositories right into the correct directory paths
-        git clone --depth=1 -b lineage-16.0 https://github.com/Galaxy-MSM8916/android_kernel_samsung_msm8916.git kernel/samsung/msm8916
-        git clone --depth=1 -b lineage-16.0 https://github.com/Galaxy-MSM8916/android_device_samsung_msm8916-common.git device/samsung/msm8916-common
-        git clone --depth=1 -b lineage-16.0 https://github.com/Galaxy-MSM8916/android_device_samsung_coreprimeelte.git device/samsung/coreprimeelte
-        git clone --depth=1 -b lineage-16.0 https://github.com/Galaxy-MSM8916/proprietary_vendor_samsung.git vendor/samsung
+        # Uses explicit git:// handles to pull public assets cleanly without auth prompts
+        git clone --depth=1 -b lineage-16.0 git://github.com/Galaxy-MSM8916/android_kernel_samsung_msm8916.git kernel/samsung/msm8916
+        git clone --depth=1 -b lineage-16.0 git://github.com/Galaxy-MSM8916/android_device_samsung_msm8916-common.git device/samsung/msm8916-common
+        git clone --depth=1 -b lineage-16.0 git://github.com/Galaxy-MSM8916/android_device_samsung_coreprimeelte.git device/samsung/coreprimeelte
+        git clone --depth=1 -b lineage-16.0 git://github.com/Galaxy-MSM8916/proprietary_vendor_samsung.git vendor/samsung
 
     - name: Execute Cross-Compilation Routine
       run: |
